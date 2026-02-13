@@ -1,10 +1,15 @@
-﻿namespace Lezione6.SchoolManager.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Lezione6.SchoolManager.DTO
 {
     public class StudentDto
     {
+        [Range(1, int.MaxValue)]
         public int Id { get; set; }
+        [MinLength(2)]
         public required string Name { get; set; }
+        [MinLength(2)]
         public required string Surname { get; set; }
-        public Dictionary<int, string>? Courses { get; set; }
+        public List<CourseDto>? Courses { get; set; }
     }
 }
