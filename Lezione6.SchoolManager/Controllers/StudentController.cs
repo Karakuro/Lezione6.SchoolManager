@@ -25,7 +25,8 @@ namespace Lezione6.SchoolManager.Controllers
         {
             try
             {
-                var result = _ctx.Students;
+                var result = _ctx.Students.Include(s => s.Enrollments);
+                return Ok(result);
                 var students = result.Select(s => new StudentDto()
                 {
                     Id = s.StudentId,
@@ -110,6 +111,19 @@ namespace Lezione6.SchoolManager.Controllers
                 return NoContent();
             else
                 return UnprocessableEntity();
+        }
+
+        public void Check(int id)
+        {
+            var teacher = _ctx.Teachers
+                .Include(t => t.Modules)
+                .Include(t => t.Subjects)
+                .SingleOrDefault(t => t.TeacherId == id);
+            var moduleSubjects = teacher?.Modules?.Select(m => m.SubjectId);
+            var teacherSubjects = teacher?.Subjects?.Select(s => s.SubjectId);
+            var problems = moduleSubjects.Except(teacherSubjects);
+            if(problems.Any())
+                return;
         }
     }
 }

@@ -14,7 +14,28 @@ namespace Lezione6.SchoolManager.DTO
                 Courses = entity.Enrollments?
                             .Where(e => e.Course != null)
                             .Select(e => e.Course)
-                            .ToList().ConvertAll(MapEntityToDto),
+                            .ToList().ConvertAll(MapEntityToBaseDto),
+            };
+            return dto;
+        }
+
+        public StudentDto MapEntityToBaseDto(Student entity)
+        {
+            StudentDto dto = new StudentDto()
+            {
+                Name = entity.Name,
+                Surname = entity.Surname,
+                Id = entity.StudentId
+            };
+            return dto;
+        }
+
+        public CourseDto MapEntityToBaseDto(Course entity)
+        {
+            CourseDto dto = new CourseDto()
+            {
+                Title = entity.Title,
+                Id = entity.CourseId
             };
             return dto;
         }
@@ -24,7 +45,11 @@ namespace Lezione6.SchoolManager.DTO
             CourseDto dto = new CourseDto()
             {
                 Title = entity.Title,
-                Id = entity.CourseId
+                Id = entity.CourseId,
+                Students = entity.Enrollments?
+                            .Select(e => e.Student)
+                            .ToList()
+                            .ConvertAll(MapEntityToBaseDto)
             };
             return dto;
         }
