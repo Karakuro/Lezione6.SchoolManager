@@ -1,5 +1,6 @@
 using Lezione6.SchoolManager.Data;
 using Lezione6.SchoolManager.DTO;
+using Lezione6.SchoolManager.Repositories;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ builder.Services.AddSqlServer<SchoolDbContext>(
 );
 
 builder.Services.AddSingleton<Mapper>();
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 
 var app = builder.Build();
 

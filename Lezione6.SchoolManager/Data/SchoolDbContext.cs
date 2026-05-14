@@ -33,10 +33,10 @@ namespace Lezione6.SchoolManager.Data
                 .WithOne(e => e.Student)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Teacher>()
-                .HasMany(t => t.Modules)
-                .WithMany(m => m.Teachers)
-                .UsingEntity(e => e.ToTable("Assignments"));
+            //modelBuilder.Entity<Teacher>()
+            //    .HasMany(t => t.Modules)
+            //    .WithMany(m => m.Teachers)
+            //    .UsingEntity(e => e.ToTable("Assignments"));
 
             modelBuilder.Entity<Teacher>()
                 .HasMany(t => t.Subjects)
@@ -50,5 +50,7 @@ namespace Lezione6.SchoolManager.Data
         public DbSet<Course> Courses { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Student> Students { get; set; }
+        public DbSet<Evaluation> Evaluations { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
     }
 }

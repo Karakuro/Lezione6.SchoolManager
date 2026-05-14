@@ -1,11 +1,12 @@
 ﻿namespace Lezione6.SchoolManager.Data
 {
-    public class Teacher
+    public record class Teacher : BaseEntity
     {
         public int TeacherId { get; set; }
         public required string Name { get; set; }
         public required string Surname { get; set; }
-        public List<Module>? Modules { get; set; }
+        public int YearFirstEmployed { get; set; }
+        public List<Assignment>? Assignments { get; set; }
         public List<Subject>? Subjects { get; set; }
     }
 }

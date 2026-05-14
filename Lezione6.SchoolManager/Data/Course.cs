@@ -1,6 +1,6 @@
 ﻿namespace Lezione6.SchoolManager.Data
 {
-    public class Course
+    public record class Course : BaseEntity
     {
         public int CourseId { get; set; }
         public required string Title { get; set; }

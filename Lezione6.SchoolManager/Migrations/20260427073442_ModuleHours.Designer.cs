@@ -4,6 +4,7 @@ using Lezione6.SchoolManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lezione6.SchoolManager.Migrations
 {
     [DbContext(typeof(SchoolDbContext))]
-    partial class SchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260427073442_ModuleHours")]
+    partial class ModuleHours
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,24 +24,6 @@ namespace Lezione6.SchoolManager.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Lezione6.SchoolManager.Data.Assignment", b =>
-                {
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ModuleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AssignedHours")
-                        .HasColumnType("int");
-
-                    b.HasKey("TeacherId", "ModuleId");
-
-                    b.HasIndex("ModuleId");
-
-                    b.ToTable("Assignments");
-                });
 
             modelBuilder.Entity("Lezione6.SchoolManager.Data.Course", b =>
                 {
@@ -73,27 +58,6 @@ namespace Lezione6.SchoolManager.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Enrollments");
-                });
-
-            modelBuilder.Entity("Lezione6.SchoolManager.Data.Evaluation", b =>
-                {
-                    b.Property<int>("EvaluationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EvaluationId"));
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Value")
-                        .HasColumnType("int");
-
-                    b.HasKey("EvaluationId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Evaluations");
                 });
 
             modelBuilder.Entity("Lezione6.SchoolManager.Data.Module", b =>
@@ -180,12 +144,24 @@ namespace Lezione6.SchoolManager.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("YearFirstEmployed")
-                        .HasColumnType("int");
-
                     b.HasKey("TeacherId");
 
                     b.ToTable("Teachers");
+                });
+
+            modelBuilder.Entity("ModuleTeacher", b =>
+                {
+                    b.Property<int>("ModulesModuleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeachersTeacherId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ModulesModuleId", "TeachersTeacherId");
+
+                    b.HasIndex("TeachersTeacherId");
+
+                    b.ToTable("Assignments", (string)null);
                 });
 
             modelBuilder.Entity("SubjectTeacher", b =>
@@ -201,25 +177,6 @@ namespace Lezione6.SchoolManager.Migrations
                     b.HasIndex("TeachersTeacherId");
 
                     b.ToTable("Competences", (string)null);
-                });
-
-            modelBuilder.Entity("Lezione6.SchoolManager.Data.Assignment", b =>
-                {
-                    b.HasOne("Lezione6.SchoolManager.Data.Module", "Module")
-                        .WithMany("Assignments")
-                        .HasForeignKey("ModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Lezione6.SchoolManager.Data.Teacher", "Teacher")
-                        .WithMany("Assignments")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Module");
-
-                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("Lezione6.SchoolManager.Data.Enrollment", b =>
@@ -241,17 +198,6 @@ namespace Lezione6.SchoolManager.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("Lezione6.SchoolManager.Data.Evaluation", b =>
-                {
-                    b.HasOne("Lezione6.SchoolManager.Data.Student", "Student")
-                        .WithMany("Evaluations")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("Lezione6.SchoolManager.Data.Module", b =>
                 {
                     b.HasOne("Lezione6.SchoolManager.Data.Course", "Course")
@@ -269,6 +215,21 @@ namespace Lezione6.SchoolManager.Migrations
                     b.Navigation("Course");
 
                     b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("ModuleTeacher", b =>
+                {
+                    b.HasOne("Lezione6.SchoolManager.Data.Module", null)
+                        .WithMany()
+                        .HasForeignKey("ModulesModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Lezione6.SchoolManager.Data.Teacher", null)
+                        .WithMany()
+                        .HasForeignKey("TeachersTeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SubjectTeacher", b =>
@@ -293,26 +254,14 @@ namespace Lezione6.SchoolManager.Migrations
                     b.Navigation("Modules");
                 });
 
-            modelBuilder.Entity("Lezione6.SchoolManager.Data.Module", b =>
-                {
-                    b.Navigation("Assignments");
-                });
-
             modelBuilder.Entity("Lezione6.SchoolManager.Data.Student", b =>
                 {
                     b.Navigation("Enrollments");
-
-                    b.Navigation("Evaluations");
                 });
 
             modelBuilder.Entity("Lezione6.SchoolManager.Data.Subject", b =>
                 {
                     b.Navigation("Modules");
-                });
-
-            modelBuilder.Entity("Lezione6.SchoolManager.Data.Teacher", b =>
-                {
-                    b.Navigation("Assignments");
                 });
 #pragma warning restore 612, 618
         }
